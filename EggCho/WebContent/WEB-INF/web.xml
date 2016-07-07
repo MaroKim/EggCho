@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>EggCho</display-name>
+  <context-param>
+	<param-name>driver</param-name>
+	<param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param><context-param>
+	<param-name>url</param-name>
+	<param-value>jdbc:mysql://localhost/Test</param-value>
+  </context-param><context-param>
+	<param-name>username</param-name>
+	<param-value>root</param-value>
+  </context-param><context-param>
+	<param-name>password</param-name>
+	<param-value>dprmch123</param-value>
+  </context-param><welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+
+	<servlet>
+		<servlet-name>AppInitServlet</servlet-name>
+		<servlet-class>User.AppInitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>User.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/User/login</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>User.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/User/logout</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>MemberAdd</servlet-name>
+		<servlet-class>User.MemberAdd</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MemberAdd</servlet-name>
+		<url-pattern>/User/Add</url-pattern>
+	</servlet-mapping>
+
+</web-app>

@@ -1,59 +1,101 @@
 package User;
 
-import java.io.*;
-import java.sql.*;
-import javax.servlet.http.*;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.*;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.io.PrintWriter;
 
-@WebServlet("/User/login")
-public class LoginServlet extends HttpServlet{
-	
-	/**
-	 * 
-	 */
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
 
 	@Override
-	protected void doPost(HttpServletRequest request , HttpServletResponse response)
-	throws ServletException, IOException{
-		
-		
-		PrintWriter out = response.getWriter();
-		out.println("되는지 확인이나 해보자 ");
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	
 		Connection conn = null;
-		PreparedStatement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
-		
+
+
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+
+
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/study?characterEncoding=UTF-8","root","1234");
-			stmt = conn.prepareStatement("select mname,pwd from members where mname=? and pwd=?");
+
+			String sqlresultid = null;
+			String sqlresultpwd = null;
+
+			String id = request.getParameter("email");
+			String pwd = request.getParameter("password");
+
+
+			ServletContext sc = this.getServletContext();
+			conn = (Connection) sc.getAttribute("conn");
+			pstmt = conn.prepareStatement("select id,pwd from user where id=? and pwd=?");
+			pstmt.setString(1,id);
+			pstmt.setString(2,pwd);
+			//
+			String test = request.getParameter("email");
+			System.out.println(test);
+					//
+			rs = pstmt.executeQuery();
 			
-			stmt.setString(1,request.getParameter("email"));
-			stmt.setString(2, request.getParameter("password1"));
 			
-			out.println(request.getParameter("email"));
-			out.println(request.getParameter("password1"));
-			rs = stmt.executeQuery();
-			
-			if(rs.next())
-			{
+
+			if(rs.next()){
+				
 				HttpSession session = request.getSession();
-				
 				session.setAttribute("email", request.getParameter("email"));
-				session.setAttribute("password1", request.getParameter("password1"));
+				//session.setAttribute("password", request.getParameter("password"));
 				
-				response.sendRedirect("/EggCho/index.jsp");
-			}
+				
+				sqlresultid =rs.getString("id");       
+				sqlresultpwd =rs.getString("pwd");
+			 	
+				
+				
+				
+				if(id.equals(sqlresultid) && pwd.equals(sqlresultpwd) ){
+					PrintWriter out = response.getWriter();
+					out.println("<script language='javascript'>");
+					out.println("alert('로그인 되었습니다.');");
+					out.println("location= '/EggCho/index.jsp';");
+					out.println("</script>");
+				}
+				//response.sendRedirect("/EggCho/index.jsp");    //여기 써야됨 그래야 로그아웃됨	
 			
-		}catch(Exception e)
-		{
-			e.printStackTrace();
+				
+			  }else{
+					PrintWriter out = response.getWriter();
+					out.println("<script language='javascript'>");
+					out.println("alert('아이디와 비밀번호를 확인해주세요.');");
+					out.println("location= '/EggCho/index.jsp';");
+					out.println("</script>");
+				}
+
+			}catch (Exception e){
+			throw new ServletException(e);
+		}finally{
+			try{if (rs !=null) rs.close();}catch(Exception e){}
+			try{if (pstmt !=null) pstmt.close();}catch(Exception e){}
+		//	try{if (conn != null) conn.close();}catch(Exception e) {}
 		}
-		
+			
 	}
 
 }

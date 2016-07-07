@@ -5,12 +5,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet("/User/logout")
 public class LogoutServlet extends HttpServlet{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -32,8 +28,6 @@ public class LogoutServlet extends HttpServlet{
 		session.invalidate();
 		
 		response.sendRedirect("/EggCho/index.jsp");
-		
-		
 	}
 	
 
